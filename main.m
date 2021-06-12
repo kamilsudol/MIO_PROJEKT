@@ -1,10 +1,10 @@
 clear; clc;
 
-SSNvisualisation(5, 50);
+% SSNvisualisation(5, 50);
 
 SSNvisualisation([5 5], 50);
 
-SSNvisualisation([1 2 3 4], 50);
+% SSNvisualisation([1 2 3 4], 50);
 
 function SSNvisualisation(layers, epochs)
     load iris_dataset; % defaultowy dataset
@@ -53,7 +53,6 @@ function SSNvisualisation(layers, epochs)
     end
 
     % obrobka i wyswietlanie danych
-    hold on
         x = linspace(0, epochs, epochs+1);
     %     % biasy
     %     for i=1:length(biases(:,1,1))
@@ -70,11 +69,17 @@ function SSNvisualisation(layers, epochs)
                     biases_array_tmp = cell2mat(new_biases(i, k));
                     b_tmp(k) = biases_array_tmp(j);
                 end
+                hold on
+                figure(i)
+                if i == length(new_biases(:,1))
+                    title("Zmiana biasow na wyjsciu")
+                else
+                    title("Zmiana biasow w warstwie " + int2str(i))
+                end
                 plot(x, repmat(b_tmp,1));
+                hold off
             end
         end
-    hold off
-    hold on
         % wagi
         for i=1:length(weights(1,:,1))
             for j=1:length(weights(:,1,1))
@@ -82,11 +87,14 @@ function SSNvisualisation(layers, epochs)
                 for k=1:epochs+1
                     w_tmp(k) = weights(j, i, k);
                 end
+                hold on
+                figure(i+length(new_biases(:,1)))
+                title("Zmiana wag w warstwie " + int2str(i))
                 plot(x, repmat(w_tmp,1));
+                hold off
             end
         end
 
-    hold off
 
 
     % sprawdzenie, czy siec sie dobrze wytrenowala
