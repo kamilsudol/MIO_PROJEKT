@@ -41,7 +41,9 @@ function SSNvisualisation(layers, epochs)
     % new_weights = net.IW; 
     new_biases = net.b;
 
-
+    % declare variable to store mse err
+    mseOut = [];
+    
     % trenowanko i zbieranie danych
     for i=1:epochs
         net = train(net, train_in, train_out);
@@ -50,6 +52,11 @@ function SSNvisualisation(layers, epochs)
 
     %     new_weights(:, i+1) = net.IW; 
         new_biases(:, i+1) = net.b;
+        
+        % mse err
+        trainOut = net(train_in);
+        [~,mseOut(i),~,~] = measerr(trainOut,train_out);
+        
     end
 
     % obrobka i wyswietlanie danych
@@ -95,6 +102,11 @@ function SSNvisualisation(layers, epochs)
             end
         end
 
+    hold on
+    figure(2*length(new_biases(:,1))+3)
+    plot(x(1:epochs),mseOut(:))
+    title("Performance MSE")
+    hold off
 
 
     % sprawdzenie, czy siec sie dobrze wytrenowala
