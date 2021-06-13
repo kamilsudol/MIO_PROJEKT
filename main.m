@@ -68,11 +68,13 @@ function SSNvisualisation(layers, epochs)
    
     % wykres jakosci nauczania sieci
     hold on
-        figure(1)
-        plot(x(1:epochs),mseOut(:))
-        title("Performance MSE")
-        xlabel('Liczba epok')
+        figure(1);
+        plot(x(1:epochs),mseOut(:));
+        title("Performance MSE");
+        xlabel('Liczba epok');
+        ylabel('Wartość błędu średniokwadratowego');
     hold off
+    saveas(gcf,'Performance_MSE.png');
     
 
     
