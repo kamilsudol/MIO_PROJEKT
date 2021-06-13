@@ -109,8 +109,22 @@ function SSNvisualisation(layers, epochs)
 % % %     accuracy = ok/15 * 100
 end
 
+function [counter] = create_gif(filename, frame, counter)
+    im = frame2im(frame); 
+    [imind,cm] = rgb2ind(im,256);
+    if counter == 1 
+        imwrite(imind, cm, filename,'gif', 'Loopcount',inf); 
+        counter = counter + 1;
+    else 
+        imwrite(imind, cm, filename,'gif','WriteMode','append'); 
+    end 
+end
+
 function plot_biases(data, title_when_not_last, title_when_last, figure_move_parameter, x)
 
+    filename1 = 'bias_wyjscie.gif';
+    filename2 = 'bias_warstwa.gif';
+    
     % video 1
     framerate = 1; % predkosc odtwarzania klatek filmu
     v = VideoWriter('bias_wyjscie.avi');
@@ -137,8 +151,6 @@ function plot_biases(data, title_when_not_last, title_when_last, figure_move_par
            
             hold on
             axis tight manual % this ensures that getframe() returns a consistent size
-            filename1 = 'bias_wyjscie.gif';
-            filename2 = 'bias_warstwa.gif';
             fig = figure(i + figure_move_parameter);
             ylabel('Bias');
             xlabel('Liczba epok');
@@ -147,35 +159,20 @@ function plot_biases(data, title_when_not_last, title_when_last, figure_move_par
             if i == length(data(:,1))
                 title(title_when_last);
                 frame = getframe(fig);
-                im = frame2im(frame); 
-                [imind,cm] = rgb2ind(im,256);
-                if counter4gif == 1 
-                    imwrite(imind,cm,filename1,'gif', 'Loopcount',inf); 
-                    counter4gif = counter4gif + 1;
-                else 
-                    imwrite(imind,cm,filename1,'gif','WriteMode','append'); 
-                end 
+                % gif
+                counter4gif = create_gif(filename1, frame, counter4gif);
+                % vid
                 writeVideo(v,frame);
             else
                 title(title_when_not_last + int2str(i));
                 frame = getframe(fig);
-                
                 % gif
-                im = frame2im(frame); 
-                [imind,cm] = rgb2ind(im,256);
-                if counter4gif2 == 1 
-                    imwrite(imind,cm,filename2,'gif', 'Loopcount',inf);
-                    counter4gif2 = counter4gif2 + 1;
-                else 
-                    imwrite(imind,cm,filename2,'gif','WriteMode','append'); 
-                end 
-                
+                counter4gif2 = create_gif(filename2, frame, counter4gif2);
                 % vid
                 writeVideo(v2,frame);
             end
             plot(x, repmat(tmp,1));
-            hold off
-            
+            hold off  
         end
     end
     close(v);
@@ -209,15 +206,7 @@ function plot_first_weights(weights, figure_move_parameter, x, epochs)
                 frame = getframe(fig);
                 
                 % gif
-                im = frame2im(frame); 
-                [imind,cm] = rgb2ind(im,256);
-                if counter4gif == 1 
-                    imwrite(imind, cm, filename,'gif', 'Loopcount',inf);
-                    counter4gif = counter4gif + 1;
-                else 
-                    imwrite(imind, cm, filename,'gif','WriteMode','append'); 
-                end 
-                
+                counter4gif = create_gif(filename, frame, counter4gif);
                 % vid
                 writeVideo(v,frame);
             hold off
@@ -269,14 +258,7 @@ function plot_layers(data, figure_move_parameter, x)
                     frame = getframe(fig);
                     
                     % gif
-                    im = frame2im(frame); 
-                    [imind,cm] = rgb2ind(im,256);
-                    if counter4gif1 == 1 
-                        imwrite(imind, cm, filename1,'gif', 'Loopcount',inf);
-                        counter4gif1 = counter4gif1 + 1;
-                    else 
-                        imwrite(imind, cm, filename1,'gif','WriteMode','append'); 
-                    end 
+                    counter4gif1 = create_gif(filename1, frame, counter4gif1);
                     
                     % vid
                     writeVideo(v1,frame);
@@ -285,14 +267,7 @@ function plot_layers(data, figure_move_parameter, x)
                     frame = getframe(fig);
                     
                     % gif
-                    im = frame2im(frame); 
-                    [imind,cm] = rgb2ind(im,256);
-                    if counter4gif2 == 1 
-                        imwrite(imind, cm, filename2,'gif', 'Loopcount',inf);
-                        counter4gif2 = counter4gif2 + 1;
-                    else 
-                        imwrite(imind, cm, filename2,'gif','WriteMode','append'); 
-                    end 
+                    counter4gif2 = create_gif(filename2, frame, counter4gif2);
                     
                     % vid
                     writeVideo(v2,frame);
