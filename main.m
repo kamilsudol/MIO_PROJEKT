@@ -1,8 +1,8 @@
 clear; clc;
 
-SSNvisualisation(5, 20);
+% SSNvisualisation(5, 20);
 
-% SSNvisualisation([5 5 5 5 5 10 11 3], 20);
+SSNvisualisation([5 5 5 5 5 10 11 3], 20);
 
 % SSNvisualisation([1 2 3 4], 50);
 
@@ -38,7 +38,7 @@ function SSNvisualisation(layers, epochs)
     % inicjalizacje zmiennych
     weights = net.IW{1}; 
     biases = net.b;
-    layers = net.LW;
+    net_layers = net.LW;
 
     % declare variable to store mse err
     mseOut = [];
@@ -49,7 +49,7 @@ function SSNvisualisation(layers, epochs)
 % % %         net = train(net, irisInputs, irisTargets);
         weights(:, :, i + 1) = net.IW{1};
         biases(:, i+1) = net.b;
-        layers(:, :, i+1) = net.LW;
+        net_layers(:, :, i+1) = net.LW;
         
         % mse err
         
@@ -65,19 +65,24 @@ function SSNvisualisation(layers, epochs)
     x = linspace(0, epochs, epochs+1);
     
     % wykres jakosci nauczania sieci
+    
+    plot_histogram2d(net.IW{1}, net.b, net.LW, length(layers)+2);
+    
     hold on
-        figure(1)
+        figure(2)
         plot(x(1:epochs),mseOut(:))
         title("Performance MSE")
         xlabel('Liczba epok')
     hold off
     
+    
+    
     % wykresy biasow
-    plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 1, x);
+    plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 2, x);
     
     % wykresy wag
-    plot_first_weights(weights, length(biases(:,1)) + 1, x, epochs);  
-    plot_layers(layers, length(biases(:,1)) + length(weights(1,:,1)) + 1, x);
+    plot_first_weights(weights, length(biases(:,1)) + 2, x, epochs);  
+    plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 2, x);
 
     % sprawdzenie, czy siec sie dobrze wytrenowala
 
@@ -183,5 +188,19 @@ function plot_layers(data, figure_move_parameter, x)
             end
         end
         plot_num = plot_num + length(weights(1,:,1));
+    end
+end
+
+function plot_histogram2d(weights, biases, layers, size)
+    subplot(size, size, 1);
+    imshow(weights);
+    for i=2:length(layers(1,:))
+        subplot(size, size, 1+(size+1)*(i-1));
+        imshow(cell2mat(layers(i,i-1)));
+    end
+    
+    for i=1:length(biases(:,1))
+        subplot(size, size, i*(size));
+        imshow(cell2mat(biases(i,1)));
     end
 end
