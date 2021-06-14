@@ -1,10 +1,16 @@
 clear; clc;
 
+
+clear figure;
+clear hold;
+% hold with heatmap is not supported -> quick fix
+hold off;
+
 % SSNvisualisation(5, 20);
 
-SSNvisualisation([5 5 5 5 5 10 11 3], 20);
+% SSNvisualisation([5 5 5 5 5 10 11 3], 20);
 
-% SSNvisualisation([1 2 3 4], 50);
+SSNvisualisation([1 2 3 4], 50);
 
 function SSNvisualisation(layers, epochs)
    irisInputs = get_uci_mlr_iris_dataset();
@@ -83,6 +89,18 @@ function SSNvisualisation(layers, epochs)
     figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 1, x);
     plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
 
+    % confusion matrix
+    
+    test_in = [klasa1_test, klasa2_test, klasa3_test];
+    test_out = [repmat([0,1], length(klasa1_test), 1);repmat([1,0], length(klasa1_test), 1);repmat([1,1], length(klasa1_test), 1)]';
+    net_out = net(test_in);
+    
+%     figure(figure_move+2)
+    [c,cm,ind,per]  = confusion(test_out, net_out);
+    figure(length(biases(:,1)) + length(weights(1,:,1)) + 3 + figure_move)
+    plotConfMat(cm)
+%     plotconfusion(test_out, net_out);
+    
     % sprawdzenie, czy siec sie dobrze wytrenowala
 
     ytest1 = round(net(klasa1_test)');
@@ -133,12 +151,13 @@ function plot_biases(data, title_when_not_last, title_when_last, figure_move_par
             end
             hold on
             figure(i + figure_move_parameter)
+            plot(x, repmat(tmp,1));
             if i == length(data(:,1))
                 title(title_when_last)
             else
                 title(title_when_not_last + int2str(i))
             end
-            plot(x, repmat(tmp,1));
+            
             xlabel('Liczba epok')
             hold off
         end
@@ -155,8 +174,8 @@ function plot_first_weights(weights, figure_move_parameter, x, epochs)
             end
             hold on
             figure(figure_move_parameter + i)
-            title("Zmiana wag polaczen na wejsciu dla neuronu " + int2str(i))
             plot(x, repmat(w_tmp,1));
+            title("Zmiana wag polaczen na wejsciu dla neuronu " + int2str(i))
             xlabel('Liczba epok')
             hold off
         end
@@ -176,12 +195,13 @@ function plot_num = plot_layers(data, figure_move_parameter, x)
                 end
                 hold on
                 figure(figure_move_parameter + i + plot_num)
+                plot(x, repmat(w_tmp,1));
                 if m == length(data(1,:,1))
                     title("Zmiana wag polaczen na wyjsciu dla neuronu " + int2str(i))
                 else
                     title("Zmiana wag polaczen w warstwie ukrytej " + int2str(m-1) + " dla neuronu " + int2str(i))
                 end
-                plot(x, repmat(w_tmp,1));
+               
                 xlabel('Liczba epok')
                 hold off
             end
@@ -212,11 +232,46 @@ function plot_one_entire_neuron_weights(weights)
             for k=1:length(weights(1,1,:))
                 hold on
                 figure(1)
-                title("title")
                 plot(k, weights(j, i, k),"o");
+                title("title")
                 xlabel('Liczba epok')
                 hold off
             end
         end
     end
+end
+
+%source: https://github.com/vtshitoyan/plotConfMat
+function plotConfMat(matrix)
+    labels = 1:size(matrix, 1);
+
+    matrix(isnan(matrix))=0; % in case there are NaN elements
+    numlabels = size(matrix, 1); % number of labels
+    % calculate the percentage accuracies
+    confpercent = 100*matrix./repmat(sum(matrix, 1),numlabels,1);
+    % plotting the colors
+    imagesc(confpercent);
+    title(sprintf('Accuracy: %.2f%%', 100*trace(matrix)/sum(matrix(:))));
+    ylabel('Output Class'); xlabel('Target Class');
+    % set the colormap
+    colormap(flipud(gray));
+    % Create strings from the matrix values and remove spaces
+    textStrings = num2str([confpercent(:), matrix(:)], '%.1f%%\n%d\n');
+    textStrings = strtrim(cellstr(textStrings));
+    % Create x and y coordinates for the strings and plot them
+    [x,y] = meshgrid(1:numlabels);
+    hStrings = text(x(:),y(:),textStrings(:), ...
+        'HorizontalAlignment','center');
+    % Get the middle value of the color range
+    midValue = mean(get(gca,'CLim'));
+    % Choose white or black for the text color of the strings so
+    % they can be easily seen over the background color
+    textColors = repmat(confpercent(:) > midValue,1,3);
+    set(hStrings,{'Color'},num2cell(textColors,2));
+    % Setting the axis labels
+    set(gca,'XTick',1:numlabels,...
+        'XTickLabel',labels,...
+        'YTick',1:numlabels,...
+        'YTickLabel',labels,...
+        'TickLength',[0 0]);
 end
