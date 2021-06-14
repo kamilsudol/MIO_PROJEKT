@@ -1,11 +1,5 @@
 clear; clc;
 
-
-clear figure;
-clear hold;
-% hold with heatmap is not supported -> quick fix
-hold off;
-
 % SSNvisualisation(5, 20);
 
 % SSNvisualisation([5 5 5 5 5 10 11 3], 20);
@@ -13,7 +7,7 @@ hold off;
 SSNvisualisation([1 2 3 4], 50);
 
 function SSNvisualisation(layers, epochs)
-   irisInputs = get_uci_mlr_iris_dataset();
+    irisInputs = get_uci_mlr_iris_dataset();
 
     % podzial danych na klasy
 
@@ -31,8 +25,13 @@ function SSNvisualisation(layers, epochs)
     
 
     net = feedforwardnet(layers); % dwie warstwy
-    net.layers{1}.transferFcn = 'logsig';
-    net.layers{2}.transferFcn = 'tansig';
+    
+    for i=1:length(layers)
+        net.layers{i}.transferFcn = 'logsig';
+    end
+    
+%     net.layers{1}.transferFcn = 'logsig';
+%     net.layers{2}.transferFcn = 'tansig';
     net.divideFcn = 'dividetrain';
     
     net = configure(net, train_in, train_out); % konfiguracja na trainin i trainout
@@ -75,13 +74,13 @@ function SSNvisualisation(layers, epochs)
 %     plot_one_entire_neuron_weights(cell2mat(net_layers(2,1,:)));
 
     
-
+    hold on
     figure(1);
     plot(x(1:epochs),mseOut(:), 'LineWidth', 1);
     title("Performance MSE");
     ylabel('Błąd średniokwadratowy');
     xlabel('Liczba epok');
-
+    hold off
     
     % wykresy biasow
     plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 1, x);
@@ -89,7 +88,7 @@ function SSNvisualisation(layers, epochs)
 %     wykresy wag
     plot_first_weights(weights, length(biases(:,1)) + 1, x, epochs);  
     figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 1, x);
-    plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
+    
 
     % confusion matrix
     
@@ -97,10 +96,11 @@ function SSNvisualisation(layers, epochs)
     test_out = [repmat([0,0,1], length(klasa1_test), 1);repmat([0,1,0], length(klasa1_test), 1);repmat([1,0,0], length(klasa1_test), 1)]';
     net_out = net(test_in);
     
-    figure(figure_move+2)
+%     figure(figure_move+2)
     [c,cm,ind,per]  = confusion(test_out, net_out);
-    figure(length(biases(:,1)) + length(weights(1,:,1)) + 3 + figure_move)
-    plotConfMat(cm)
+    
+    plot_confmat(cm, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
+    plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 2 + figure_move);
     
     % sprawdzenie, czy siec sie dobrze wytrenowala
 
@@ -152,13 +152,12 @@ function plot_biases(data, title_when_not_last, title_when_last, figure_move_par
             end
             hold on
             figure(i + figure_move_parameter)
-            plot(x, repmat(tmp,1));
+            plot(x, repmat(tmp,1),'DisplayName',"Waga polaczenia "+ int2str(j));
             if i == length(data(:,1))
                 title(title_when_last)
             else
                 title(title_when_not_last + int2str(i))
             end
-            plot(x, repmat(tmp,1),'DisplayName',"Waga polaczenia "+ int2str(j));
             legend('show');
             ylabel('Bias')
             xlabel('Liczba epok')
@@ -291,37 +290,31 @@ function plot_one_entire_neuron_weights(weights)
     end
 end
 
-%source: https://github.com/vtshitoyan/plotConfMat
-function plotConfMat(matrix)
+function plot_confmat(matrix, figure_move_parameter)
+    figure(figure_move_parameter+1)
     labels = 1:size(matrix, 1);
 
-    matrix(isnan(matrix))=0; % in case there are NaN elements
-    numlabels = size(matrix, 1); % number of labels
-    % calculate the percentage accuracies
+    matrix(isnan(matrix))=0;
+    numlabels = size(matrix, 1);
+
     confpercent = 100*matrix./repmat(sum(matrix, 1),numlabels,1);
-    % plotting the colors
+
     imagesc(confpercent);
     title(sprintf('Accuracy: %.2f%%', 100*trace(matrix)/sum(matrix(:))));
     ylabel('Output Class'); xlabel('Target Class');
-    % set the colormap
+
     colormap(flipud(gray));
-    % Create strings from the matrix values and remove spaces
+
     textStrings = num2str([confpercent(:), matrix(:)], '%.1f%%\n%d\n');
     textStrings = strtrim(cellstr(textStrings));
-    % Create x and y coordinates for the strings and plot them
+
     [x,y] = meshgrid(1:numlabels);
-    hStrings = text(x(:),y(:),textStrings(:), ...
-        'HorizontalAlignment','center');
-    % Get the middle value of the color range
+    hStrings = text(x(:),y(:),textStrings(:), 'HorizontalAlignment','center');
+    
     midValue = mean(get(gca,'CLim'));
-    % Choose white or black for the text color of the strings so
-    % they can be easily seen over the background color
+
     textColors = repmat(confpercent(:) > midValue,1,3);
     set(hStrings,{'Color'},num2cell(textColors,2));
-    % Setting the axis labels
-    set(gca,'XTick',1:numlabels,...
-        'XTickLabel',labels,...
-        'YTick',1:numlabels,...
-        'YTickLabel',labels,...
-        'TickLength',[0 0]);
+
+    set(gca,'XTick',1:numlabels, 'XTickLabel',labels, 'YTick',1:numlabels, 'YTickLabel',labels, 'TickLength',[0 0]);
 end
