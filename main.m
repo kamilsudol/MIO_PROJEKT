@@ -65,7 +65,7 @@ function SSNvisualisation(layers, epochs)
     x = linspace(0, epochs, epochs+1);
     
     % wykres jakosci nauczania sieci
-    
+%     plot_one_entire_neuron_weights(cell2mat(net_layers(2,1,:)));
     plot_histogram2d(net.IW{1}, net.b, net.LW, length(layers)+2);
     
     hold on
@@ -74,7 +74,6 @@ function SSNvisualisation(layers, epochs)
         title("Performance MSE")
         xlabel('Liczba epok')
     hold off
-    
     
     
     % wykresy biasow
@@ -156,7 +155,7 @@ function plot_first_weights(weights, figure_move_parameter, x, epochs)
             end
             hold on
             figure(figure_move_parameter + i)
-            title("Zmiana wag neuronow na wejsciu dla wejscia " + int2str(i))
+            title("Zmiana wag polaczen na wejsciu dla neuronu " + int2str(i))
             plot(x, repmat(w_tmp,1));
             xlabel('Liczba epok')
             hold off
@@ -178,9 +177,9 @@ function plot_layers(data, figure_move_parameter, x)
                 hold on
                 figure(figure_move_parameter + i + plot_num)
                 if m == length(data(1,:,1))
-                    title("Zmiana wag neuronow na wyjsciu dla wyjscia " + int2str(i))
+                    title("Zmiana wag polaczen na wyjsciu dla neuronu " + int2str(i))
                 else
-                    title("Zmiana wag neuronow w warstwie ukrytej " + int2str(m-1) + " dla wyjscia " + int2str(i))
+                    title("Zmiana wag polaczen w warstwie ukrytej " + int2str(m-1) + " dla neuronu " + int2str(i))
                 end
                 plot(x, repmat(w_tmp,1));
                 xlabel('Liczba epok')
@@ -202,5 +201,20 @@ function plot_histogram2d(weights, biases, layers, size)
     for i=1:length(biases(:,1))
         subplot(size, size, i*(size));
         imshow(cell2mat(biases(i,1)));
+    end
+end
+
+function plot_one_entire_neuron_weights(weights)
+    for i=1:length(weights(1,1,1))
+        for j=1:length(weights(:,1,1))
+            for k=1:length(weights(1,1,:))
+                hold on
+                figure(1)
+                title("title")
+                plot(k, weights(j, i, k),"o");
+                xlabel('Liczba epok')
+                hold off
+            end
+        end
     end
 end
