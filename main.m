@@ -65,24 +65,24 @@ function SSNvisualisation(layers, epochs)
     x = linspace(0, epochs, epochs+1);
     
     % wykres jakosci nauczania sieci
-%     plot_one_entire_neuron_weights(cell2mat(net_layers(2,1,:)));
+    plot_one_entire_neuron_weights(cell2mat(net_layers(2,1,:)));
 
     
 
     figure(1);
-    plot(x(1:epochs),mseOut(:));
+    plot(x(1:epochs),mseOut(:), 'LineWidth', 1);
     title("Performance MSE");
     ylabel('Błąd średniokwadratowy');
     xlabel('Liczba epok');
 
     
     % wykresy biasow
-    plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 1, x);
+%     plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 1, x);
     
     % wykresy wag
-    plot_first_weights(weights, length(biases(:,1)) + 1, x, epochs);  
-    figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 1, x);
-    plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
+%     plot_first_weights(weights, length(biases(:,1)) + 1, x, epochs);  
+%     figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 1, x);
+%     plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
 
     % sprawdzenie, czy siec sie dobrze wytrenowala
 
@@ -216,20 +216,32 @@ end
 function plot_one_entire_neuron_weights(weights)
     for i=1:length(weights(1,1,1))
         title("Zmiana wag polaczen w warstwie 1 dla neuronu 1");
+        
+        % mapa kolorów do wyboru
+        cmap = hsv(6);
         for j=1:length(weights(:,1,1))
-            name = "Waga polaczenia "+ int2str(j);
-            h = animatedline;
+            
+            hold on
+            
             ylabel('Waga');
-            xlabel('Liczba epok')
-            col = rand(1,3);
-            h.Color = col;
+            xlabel('Liczba epok');
+            
+            h = animatedline;
+            h.Color = cmap(j,:);
+            h.MarkerEdgeColor = 'none';
+            h.LineWidth = 1;
+            h.DisplayName = "Waga polaczenia "+ int2str(j);
+            
+            leg = legend(h);
+            set(leg, 'TextColor', 'black');
+            
             for k=1:length(weights(1,1,:))
                 addpoints(h,k,weights(j, i, k));
-                legend(name);
-                legend('show');
-                drawnow update
+                drawnow 
                 pause(.1)
             end
+           
         end
+        hold off
     end
 end
