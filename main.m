@@ -65,7 +65,7 @@ function SSNvisualisation(layers, epochs)
     x = linspace(0, epochs, epochs+1);
     
     % wykres jakosci nauczania sieci
-    plot_one_entire_neuron_weights(cell2mat(net_layers(2,1,:)));
+%     plot_one_entire_neuron_weights(cell2mat(net_layers(2,1,:)));
 
     
 
@@ -77,12 +77,12 @@ function SSNvisualisation(layers, epochs)
 
     
     % wykresy biasow
-%     plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 1, x);
+    plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 1, x);
     
-    % wykresy wag
-%     plot_first_weights(weights, length(biases(:,1)) + 1, x, epochs);  
-%     figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 1, x);
-%     plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
+%     wykresy wag
+    plot_first_weights(weights, length(biases(:,1)) + 1, x, epochs);  
+    figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 1, x);
+    plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
 
     % sprawdzenie, czy siec sie dobrze wytrenowala
 
@@ -197,19 +197,45 @@ function plot_num = plot_layers(data, figure_move_parameter, x)
     end
 end
 
-function plot_heatmap(weights, biases, layers, size, figure_move_parameter)
+
+function plot_heatmap(weights, biases, layers, size_x, figure_move_parameter)
     figure(figure_move_parameter + 1);
-    subplot(size, size, 1);
+    size_y = length(layers(1,:));
+    
+    %initialize
+    for i=1:size_x*size_y
+        subplot(size_y, size_x, i);
+        imshow(0.9375);
+    end
+    
+    subplot(size_y, size_x, 1);
     heatmap(weights, 'Colormap', hot);
     
     for i=2:length(layers(1,:))
-        subplot(size, size, 1+(size+1)*(i-1));
+        subplot(size_y, size_x, 1+(size_x+1)*(i-1));
         heatmap(cell2mat(layers(i,i-1)), 'Colormap', hot);
     end
     
     for i=1:length(biases(:,1))
-        subplot(size, size, i*(size));
+        subplot(size_y, size_x, i*(size_x));
         heatmap(cell2mat(biases(i,1)), 'Colormap', hot);
+    end
+    
+    for i=1:size_y
+        subplot(size_y, size_x, 1+(i-1)*size_x);
+        ylabel("Warstwa " + int2str(i));
+    end
+    
+    for i=1:size_x
+        subplot(size_y, size_x, i);
+        if i == 1
+            title("Wejscie");
+        elseif i == size_x  
+            title("Biasy");
+        else
+            title("Warstwa " + int2str(i-1));
+        end
+        
     end
 end
 
