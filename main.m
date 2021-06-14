@@ -27,7 +27,8 @@ function SSNvisualisation(layers, epochs)
     % tworzenie danych uczacych
 
     train_in = [klasa1_train, klasa2_train, klasa3_train];
-    train_out = [repmat([0,1], length(klasa1_train), 1);repmat([1,0], length(klasa1_train), 1);repmat([1,1], length(klasa1_train), 1)]';
+    train_out = [repmat([0,0,1], length(klasa1_train), 1);repmat([0,1,0], length(klasa1_train), 1);repmat([1,0,0], length(klasa1_train), 1)]';
+    
 
     net = feedforwardnet(layers); % dwie warstwy
     net.layers{1}.transferFcn = 'logsig';
@@ -92,14 +93,13 @@ function SSNvisualisation(layers, epochs)
     % confusion matrix
     
     test_in = [klasa1_test, klasa2_test, klasa3_test];
-    test_out = [repmat([0,1], length(klasa1_test), 1);repmat([1,0], length(klasa1_test), 1);repmat([1,1], length(klasa1_test), 1)]';
+    test_out = [repmat([0,0,1], length(klasa1_test), 1);repmat([0,1,0], length(klasa1_test), 1);repmat([1,0,0], length(klasa1_test), 1)]';
     net_out = net(test_in);
     
-%     figure(figure_move+2)
+    figure(figure_move+2)
     [c,cm,ind,per]  = confusion(test_out, net_out);
     figure(length(biases(:,1)) + length(weights(1,:,1)) + 3 + figure_move)
     plotConfMat(cm)
-%     plotconfusion(test_out, net_out);
     
     % sprawdzenie, czy siec sie dobrze wytrenowala
 
@@ -110,13 +110,13 @@ function SSNvisualisation(layers, epochs)
     ok = 0;
 
     for i=1:5
-       if ytest1(i,1) == 0 &&  ytest1(i,2) == 1
+       if ytest1(i,1) == 0 &&  ytest1(i,2) == 0 && ytest1(i,3) == 1
             ok = ok + 1;
        end
-       if ytest2(i,1) == 1 &&  ytest2(i,2) == 0
+       if ytest2(i,1) == 0 &&  ytest2(i,2) == 1 && ytest2(i,3) == 0
             ok = ok + 1;
        end
-       if ytest3(i,1) == 1 &&  ytest3(i,2) == 1
+       if ytest3(i,1) == 1 &&  ytest3(i,2) == 0 && ytest3(i,3) == 0
             ok = ok + 1;
        end
 
