@@ -68,12 +68,13 @@ function SSNvisualisation(layers, epochs)
 %     plot_one_entire_neuron_weights(cell2mat(net_layers(2,1,:)));
 
     
-    hold on
-        figure(1)
-        plot(x(1:epochs),mseOut(:))
-        title("Performance MSE")
-        xlabel('Liczba epok')
-    hold off
+
+    figure(1);
+    plot(x(1:epochs),mseOut(:));
+    title("Performance MSE");
+    ylabel('Błąd średniokwadratowy');
+    xlabel('Liczba epok');
+
     
     % wykresy biasow
     plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 1, x);
@@ -139,6 +140,7 @@ function plot_biases(data, title_when_not_last, title_when_last, figure_move_par
                 title(title_when_not_last + int2str(i))
             end
             plot(x, repmat(tmp,1));
+            ylabel('Bias')
             xlabel('Liczba epok')
             hold off
         end
@@ -157,6 +159,7 @@ function plot_first_weights(weights, figure_move_parameter, x, epochs)
             figure(figure_move_parameter + i)
             title("Zmiana wag polaczen na wejsciu dla neuronu " + int2str(i))
             plot(x, repmat(w_tmp,1));
+            ylabel('Waga')
             xlabel('Liczba epok')
             hold off
         end
@@ -182,7 +185,8 @@ function plot_num = plot_layers(data, figure_move_parameter, x)
                     title("Zmiana wag polaczen w warstwie ukrytej " + int2str(m-1) + " dla neuronu " + int2str(i))
                 end
                 plot(x, repmat(w_tmp,1));
-                xlabel('Liczba epok')
+                ylabel('Waga');
+                xlabel('Liczba epok');
                 hold off
             end
         end
@@ -214,7 +218,8 @@ function plot_one_entire_neuron_weights(weights)
                 figure(1)
                 title("title")
                 plot(k, weights(j, i, k),"o");
-                xlabel('Liczba epok')
+                ylabel('Waga');
+                xlabel('Liczba epok');
                 hold off
             end
         end
