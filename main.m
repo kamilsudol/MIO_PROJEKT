@@ -66,22 +66,22 @@ function SSNvisualisation(layers, epochs)
     
     % wykres jakosci nauczania sieci
 %     plot_one_entire_neuron_weights(cell2mat(net_layers(2,1,:)));
-    plot_histogram2d(net.IW{1}, net.b, net.LW, length(layers)+2);
+
     
     hold on
-        figure(2)
+        figure(1)
         plot(x(1:epochs),mseOut(:))
         title("Performance MSE")
         xlabel('Liczba epok')
     hold off
-    
     
     % wykresy biasow
     plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 2, x);
     
     % wykresy wag
     plot_first_weights(weights, length(biases(:,1)) + 2, x, epochs);  
-    plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 2, x);
+    figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 2, x);
+    plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, figure_move);
 
     % sprawdzenie, czy siec sie dobrze wytrenowala
 
@@ -164,7 +164,7 @@ function plot_first_weights(weights, figure_move_parameter, x, epochs)
 end
 
 
-function plot_layers(data, figure_move_parameter, x)
+function plot_num = plot_layers(data, figure_move_parameter, x)
     plot_num = 0;
     for m=2:length(data(1,:,1))
         weights = cell2mat(data(m,m-1,:));
@@ -190,17 +190,19 @@ function plot_layers(data, figure_move_parameter, x)
     end
 end
 
-function plot_histogram2d(weights, biases, layers, size)
+function plot_heatmap(weights, biases, layers, size, figure_move_parameter)
+    figure(figure_move_parameter + 1);
     subplot(size, size, 1);
-    imshow(weights);
+    heatmap(weights, 'Colormap', hot);
+    
     for i=2:length(layers(1,:))
         subplot(size, size, 1+(size+1)*(i-1));
-        imshow(cell2mat(layers(i,i-1)));
+        heatmap(cell2mat(layers(i,i-1)), 'Colormap', hot);
     end
     
     for i=1:length(biases(:,1))
         subplot(size, size, i*(size));
-        imshow(cell2mat(biases(i,1)));
+        heatmap(cell2mat(biases(i,1)), 'Colormap', hot);
     end
 end
 
