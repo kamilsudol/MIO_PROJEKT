@@ -139,7 +139,8 @@ function plot_biases(data, title_when_not_last, title_when_last, figure_move_par
             else
                 title(title_when_not_last + int2str(i))
             end
-            plot(x, repmat(tmp,1));
+            plot(x, repmat(tmp,1),'DisplayName',"Waga polaczenia "+ int2str(j));
+            legend('show');
             ylabel('Bias')
             xlabel('Liczba epok')
             hold off
@@ -158,7 +159,8 @@ function plot_first_weights(weights, figure_move_parameter, x, epochs)
             hold on
             figure(figure_move_parameter + i)
             title("Zmiana wag polaczen na wejsciu dla neuronu " + int2str(i))
-            plot(x, repmat(w_tmp,1));
+            plot(x, repmat(w_tmp,1),'DisplayName',"Waga polaczenia "+ int2str(j));
+            legend('show');
             ylabel('Waga')
             xlabel('Liczba epok')
             hold off
@@ -184,7 +186,8 @@ function plot_num = plot_layers(data, figure_move_parameter, x)
                 else
                     title("Zmiana wag polaczen w warstwie ukrytej " + int2str(m-1) + " dla neuronu " + int2str(i))
                 end
-                plot(x, repmat(w_tmp,1));
+                plot(x, repmat(w_tmp,1),'DisplayName',"Waga polaczenia "+ int2str(j));
+                legend('show');
                 ylabel('Waga');
                 xlabel('Liczba epok');
                 hold off
@@ -212,15 +215,20 @@ end
 
 function plot_one_entire_neuron_weights(weights)
     for i=1:length(weights(1,1,1))
+        title("Zmiana wag polaczen w warstwie 1 dla neuronu 1");
         for j=1:length(weights(:,1,1))
+            name = "Waga polaczenia "+ int2str(j);
+            h = animatedline;
+            ylabel('Waga');
+            xlabel('Liczba epok')
+            col = rand(1,3);
+            h.Color = col;
             for k=1:length(weights(1,1,:))
-                hold on
-                figure(1)
-                title("title")
-                plot(k, weights(j, i, k),"o");
-                ylabel('Waga');
-                xlabel('Liczba epok');
-                hold off
+                addpoints(h,k,weights(j, i, k));
+                legend(name);
+                legend('show');
+                drawnow update
+                pause(.1)
             end
         end
     end
