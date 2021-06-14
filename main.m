@@ -76,12 +76,12 @@ function SSNvisualisation(layers, epochs)
     hold off
     
     % wykresy biasow
-    plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 2, x);
+    plot_biases(biases, "Zmiana biasow w warstwie ", "Zmiana biasow na wyjsciu", 1, x);
     
     % wykresy wag
-    plot_first_weights(weights, length(biases(:,1)) + 2, x, epochs);  
-    figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 2, x);
-    plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, figure_move);
+    plot_first_weights(weights, length(biases(:,1)) + 1, x, epochs);  
+    figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 1, x);
+    plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
 
     % sprawdzenie, czy siec sie dobrze wytrenowala
 
