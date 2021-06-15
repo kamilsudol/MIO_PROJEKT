@@ -5,7 +5,7 @@ function plot_heatmap(weights, biases, layers, size_x, figure_move_parameter)
     %initialize
     for i=1:size_x*size_y
         subplot(size_y, size_x, i);
-        imshow(0.9375);
+        imshow(1); % 1 for live editor, 0.9375 for normal use
     end
     
     subplot(size_y, size_x, 1);
