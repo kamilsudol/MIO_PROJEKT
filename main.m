@@ -1,10 +1,10 @@
 clear; clc;
 
-% SSNvisualisation(5, 20);
+SSNvisualisation(5, 20);
 
 % SSNvisualisation([5 5 5 5 5 10 11 3], 20);
 
-SSNvisualisation([1 2 3 4], 50);
+% SSNvisualisation([1 2 3 4], 50);
 
 function SSNvisualisation(layers, epochs)
     irisInputs = get_uci_mlr_iris_dataset();
@@ -97,7 +97,7 @@ function SSNvisualisation(layers, epochs)
     net_out = net(test_in);
     
 %     figure(figure_move+2)
-    [c,cm,ind,per]  = confusion(test_out, net_out);
+    [~,cm,~,~]  = confusion(test_out, net_out);
     
     plot_confmat(cm, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
     plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 2 + figure_move);
@@ -293,28 +293,28 @@ end
 function plot_confmat(matrix, figure_move_parameter)
     figure(figure_move_parameter+1)
     labels = 1:size(matrix, 1);
-
     matrix(isnan(matrix))=0;
+    
     numlabels = size(matrix, 1);
 
     confpercent = 100*matrix./repmat(sum(matrix, 1),numlabels,1);
-
+    confpercent(isnan(confpercent)) = 0;
+    
     imagesc(confpercent);
-    title(sprintf('Accuracy: %.2f%%', 100*trace(matrix)/sum(matrix(:))));
-    ylabel('Output Class'); xlabel('Target Class');
+    accuracyTitle = sprintf('Accuracy: %.2f %%', 100*trace(matrix)/sum(matrix(:)));
+    title(accuracyTitle);
+    ylabel('Output Class'); 
+    xlabel('Target Class');
 
-    colormap(flipud(gray));
-
-    textStrings = num2str([confpercent(:), matrix(:)], '%.1f%%\n%d\n');
-    textStrings = strtrim(cellstr(textStrings));
-
+    textInBlocks = num2str([confpercent(1), matrix(1)], '%.1f%%\n%d');
+    for i = 2:range(size(confpercent(:)))+1
+        textInBlocks = strcat(textInBlocks,{';'},num2str([confpercent(i), matrix(i)], '%.1f%%\n%d'));
+    end
+    textInBlocksArr = split(textInBlocks,';');      
+    textStrings = strtrim(cellstr(textInBlocksArr));
+    
     [x,y] = meshgrid(1:numlabels);
     hStrings = text(x(:),y(:),textStrings(:), 'HorizontalAlignment','center');
     
-    midValue = mean(get(gca,'CLim'));
-
-    textColors = repmat(confpercent(:) > midValue,1,3);
-    set(hStrings,{'Color'},num2cell(textColors,2));
-
     set(gca,'XTick',1:numlabels, 'XTickLabel',labels, 'YTick',1:numlabels, 'YTickLabel',labels, 'TickLength',[0 0]);
 end
