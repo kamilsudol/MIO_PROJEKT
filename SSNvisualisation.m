@@ -92,7 +92,7 @@ function SSNvisualisation(layers, epochs, plottype)
             plot_first_weights(weights, length(biases(:,1)) + 1, x, epochs);  
             figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 1, x);
 
-            plot_confmat(cm, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
+            plot_confmat(cm', length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
             plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 2 + figure_move);
             
         case 'compare'
@@ -104,7 +104,7 @@ function SSNvisualisation(layers, epochs, plottype)
             subplot(1, 2, 2);
             plot_mse_performance(x, epochs, mseOut);
             
-            plot_confmat(cm, 1);
+            plot_confmat(cm', 1);
             
             plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, 2);
             
