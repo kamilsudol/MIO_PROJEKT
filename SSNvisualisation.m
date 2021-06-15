@@ -42,12 +42,10 @@ function SSNvisualisation(layers, epochs, plottype)
         biases(:, i+1) = net.b;
         net_layers(:, :, i+1) = net.LW;
         training_data = [training_data tr.perf(:)'];
-%         training_data(i,:) = tr.perf;
         
         % mse err
         trainOut = net(train_in);
-        [~,mseOut(i),~,~] = measerr(trainOut,train_out);
-        
+        [~,mseOut(i),~,~] = measerr(trainOut,train_out);   
     end
     
     % confusion matrix
@@ -115,7 +113,6 @@ function SSNvisualisation(layers, epochs, plottype)
 
             figure(5);
             plotwb(net);
-            
             
         case 'animated'
             plot_one_entire_neuron_weights(cell2mat(net_layers(2,1,:)));

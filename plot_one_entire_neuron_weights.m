@@ -37,12 +37,9 @@ function plot_one_entire_neuron_weights(weights)
                 counter4gif = create_gif(gif_filename, frame, counter4gif);
                 % vid
                 writeVideo(v, frame);
-                
             end   
         end
-        hold off
-        
+        hold off    
     end
     close(v);
-    clf;
 end
