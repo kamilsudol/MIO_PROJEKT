@@ -50,10 +50,6 @@ function SSNvisualisation(layers, epochs, plottype)
         
     end
     
-    % defaultowy plot performance
-    plotperform(tr);
-    saveas(gcf,'Plot perform.png');
-    
     % confusion matrix
     test_in = [klasa1_test, klasa2_test, klasa3_test];
     test_out = [repmat([0,0,1], length(klasa1_test), 1);repmat([0,1,0], length(klasa1_test), 1);repmat([1,0,0], length(klasa1_test), 1)]';
