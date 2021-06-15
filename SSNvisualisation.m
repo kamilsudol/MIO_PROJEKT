@@ -41,7 +41,7 @@ function SSNvisualisation(layers, epochs, plottype)
         weights(:, :, i + 1) = net.IW{1};
         biases(:, i+1) = net.b;
         net_layers(:, :, i+1) = net.LW;
-        training_data(:,i) = tr.perf;
+        training_data = [training_data tr.perf(:)'];
 %         training_data(i,:) = tr.perf;
         
         % mse err
@@ -49,8 +49,6 @@ function SSNvisualisation(layers, epochs, plottype)
         [~,mseOut(i),~,~] = measerr(trainOut,train_out);
         
     end
-    
-    training_data = training_data(:)';
     
     % defaultowy plot performance
     plotperform(tr);
