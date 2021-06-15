@@ -99,7 +99,8 @@ function SSNvisualisation(layers, epochs, plottype)
             figure(1);
             subplot(1, 2, 1);
             plot(linspace(0, epochs+1, length(training_data)), training_data);
-            title("Feedforwardnet performance");
+            best = sprintf('%.6f', training_data(length(training_data)));
+            title("Feedforwardnet performance (Best: "+best+")");
             xlabel("Epochs");
             subplot(1, 2, 2);
             plot_mse_performance(x, epochs, mseOut);
