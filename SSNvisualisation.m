@@ -113,14 +113,16 @@ function SSNvisualisation(layers, epochs, plottype)
             subplot(1, 2, 2);
             plot_mse_performance(x, epochs, mseOut);
             
-            figure(2);
+            plot_confmat(cm, 1);
             
+            plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, 2);
+            
+            figure(4);
             plotconfusion(test_out, net_out);
-            plot_confmat(cm, 2);
-            
-            figure(3);
+
+            figure(5);
             plotwb(net);
-            plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, 3);
+            
             
         case 'animated'
             plot_one_entire_neuron_weights(cell2mat(net_layers(2,1,:)));
