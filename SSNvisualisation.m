@@ -2,7 +2,6 @@ function SSNvisualisation(layers, epochs, plottype)
     irisInputs = get_uci_mlr_iris_dataset();
 
     % podzial danych na klasy
-
     klasa1_train = irisInputs(:,(1:45));
     klasa1_test = irisInputs(:,(46:50));
     klasa2_train = irisInputs(:,(51:95));
@@ -11,12 +10,11 @@ function SSNvisualisation(layers, epochs, plottype)
     klasa3_test = irisInputs(:,(146:150));
 
     % tworzenie danych uczacych
-
     train_in = [klasa1_train, klasa2_train, klasa3_train];
     train_out = [repmat([0,0,1], length(klasa1_train), 1);repmat([0,1,0], length(klasa1_train), 1);repmat([1,0,0], length(klasa1_train), 1)]';
     
 
-    net = feedforwardnet(layers); % dwie warstwy
+    net = feedforwardnet(layers);
     
     for i=1:length(layers)
         net.layers{i}.transferFcn = 'logsig'; %'tansig'
@@ -26,7 +24,7 @@ function SSNvisualisation(layers, epochs, plottype)
     
     net = configure(net, train_in, train_out); % konfiguracja na trainin i trainout
 
-    net.trainParam.epochs = 5; % to epoki z neta, ustawilem tyle, zeby cos tam sie uczylo
+    net.trainParam.epochs = 5; % liczba epok
 
     % inicjalizacje zmiennych
     weights = net.IW{1}; 
@@ -34,7 +32,7 @@ function SSNvisualisation(layers, epochs, plottype)
     net_layers = net.LW;
     training_data = [];
 
-    % declare variable to store mse err
+    % mse
     mseOut = [];
     
     % trenowanko i zbieranie danych
@@ -44,9 +42,9 @@ function SSNvisualisation(layers, epochs, plottype)
         biases(:, i+1) = net.b;
         net_layers(:, :, i+1) = net.LW;
         training_data(:,i) = tr.perf;
+%         training_data(i,:) = tr.perf;
         
         % mse err
-        
         trainOut = net(train_in);
         [~,mseOut(i),~,~] = measerr(trainOut,train_out);
         
@@ -54,8 +52,11 @@ function SSNvisualisation(layers, epochs, plottype)
     
     training_data = training_data(:)';
     
-    % confusion matrix
+    % defaultowy plot performance
+    plotperform(tr);
+    saveas(gcf,'Plot perform.png');
     
+    % confusion matrix
     test_in = [klasa1_test, klasa2_test, klasa3_test];
     test_out = [repmat([0,0,1], length(klasa1_test), 1);repmat([0,1,0], length(klasa1_test), 1);repmat([1,0,0], length(klasa1_test), 1)]';
     net_out = net(test_in);
@@ -63,7 +64,6 @@ function SSNvisualisation(layers, epochs, plottype)
     [~,cm,~,~]  = confusion(test_out, net_out);
     
     % sprawdzenie, czy siec sie dobrze wytrenowala
-
     ytest1 = round(net(klasa1_test)');
     ytest2 = round(net(klasa2_test)');
     ytest3 = round(net(klasa3_test)');
@@ -99,7 +99,6 @@ function SSNvisualisation(layers, epochs, plottype)
             % wykresy wag
             plot_first_weights(weights, length(biases(:,1)) + 1, x, epochs);  
             figure_move = plot_layers(net_layers, length(biases(:,1)) + length(weights(1,:,1)) + 1, x);
-
 
             plot_confmat(cm, length(biases(:,1)) + length(weights(1,:,1)) + 1 + figure_move);
             plot_heatmap(net.IW{1}, net.b, net.LW, length(layers)+2, length(biases(:,1)) + length(weights(1,:,1)) + 2 + figure_move);

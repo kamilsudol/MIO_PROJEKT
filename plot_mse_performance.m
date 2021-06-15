@@ -5,4 +5,5 @@ function plot_mse_performance(x, epochs, mseOut)
     ylabel('Błąd średniokwadratowy');
     xlabel('Liczba epok');
     hold off
+    saveas(gcf,'Performance_MSE.png');
 end

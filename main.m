@@ -2,7 +2,7 @@ clear; clc;
 
 % SSNvisualisation(5, 50, 'compare');
 
-SSNvisualisation(5, 50, 'all');
+SSNvisualisation(5, 50, 'animated');
 
 % SSNvisualisation(5, 50, 'animated');
 

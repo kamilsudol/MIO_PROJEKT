@@ -1,4 +1,13 @@
 function plot_one_entire_neuron_weights(weights)
+    % video 1
+    framerate = 10; % predkosc odtwarzania klatek filmu
+    v = VideoWriter('wagi_polaczen_w1_n1.avi');
+    v.FrameRate = framerate; 
+    open(v);
+    
+    gif_filename = 'wagi_polaczen_w1_n1.gif';
+    counter4gif = 1;
+    
     for i=1:length(weights(1,1,1))
         title("Zmiana wag polaczen w warstwie 1 dla neuronu 1");
         
@@ -7,7 +16,6 @@ function plot_one_entire_neuron_weights(weights)
         for j=1:length(weights(:,1,1))
             
             hold on
-            
             ylabel('Waga');
             xlabel('Liczba epok');
             
@@ -23,10 +31,18 @@ function plot_one_entire_neuron_weights(weights)
             for k=1:length(weights(1,1,:))
                 addpoints(h,k,weights(j, i, k));
                 drawnow 
+                frame = getframe(gcf);
                 pause(.1)
-            end
-           
+                % gif
+                counter4gif = create_gif(gif_filename, frame, counter4gif);
+                % vid
+                writeVideo(v, frame);
+                
+            end   
         end
         hold off
+        
     end
+    close(v);
+    clf;
 end
