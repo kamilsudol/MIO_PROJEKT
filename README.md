@@ -1,6 +1,6 @@
 # Projekt z przedmiotu Metody Inteligencji Obliczeniowej
 ## *Wizualizacja procesu uczenia SSN*
-Pełna dokumentacja projektu znajduje się pod [tym](https://github.com/kamilsudol/MIO_PROJEKT/blob/main/MIO%20-%20dokumentacja.pdf) linkiem.
+**Pełna dokumentacja projektu znajduje się pod [***tym***](https://github.com/kamilsudol/MIO_PROJEKT/blob/main/MIO%20-%20dokumentacja.pdf) linkiem.**
 ### Twórcy
  - [```Kamil Sudoł```](https://github.com/kamilsudol)
  - [```Patryk Śledź```](https://github.com/patryk0504)
