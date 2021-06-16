@@ -12,9 +12,9 @@ function plot_num = plot_layers(data, figure_move_parameter, x)
                 figure(figure_move_parameter + i + plot_num)
                 plot(x, repmat(w_tmp,1),'DisplayName',"Waga polaczenia "+ int2str(j));
                 if m == length(data(1,:,1))
-                    title("Zmiana wag polaczen na wyjsciu dla neuronu " + int2str(i))
+                    title("Zmiana wag polaczen na wyjsciu dla wyjscia " + int2str(i))
                 else
-                    title("Zmiana wag polaczen w warstwie ukrytej " + int2str(m-1) + " dla neuronu " + int2str(i))
+                    title("Zmiana wag polaczen w warstwie ukrytej " + int2str(m-1) + " dla wyjscia " + int2str(i))
                 end
                 legend('show');
                 ylabel('Waga');
