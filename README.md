@@ -16,7 +16,7 @@ Wybrano zbiór danych Irysów ze strony:
 
 którego podzielono na klasy, gdzie dla każdej klasy 90% danych przeznaczono do uczenia sieci, a 10% danych do testowania.
 
-Następnie zrealizowano wizualizację zmianę poszczególnych wag i biasów w trakcie procesu uczenia. Projekt powinien zadziałać dla dowolnej sieci typu wielowarstwowego oraz dowolnej metody uczącej.
+Następnie zrealizowano wizualizację zmiany poszczególnych wag i biasów w trakcie procesu uczenia. Projekt powinien zadziałać dla dowolnej sieci typu wielowarstwowego oraz dowolnej metody uczącej.
 ### Przykładowe wyniki
 
 ![Zmiany wag połączeń](https://github.com/kamilsudol/MIO_PROJEKT/blob/main/pics/wagi_polaczen_w1_n1.gif)
